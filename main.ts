@@ -43,10 +43,10 @@ stdin.on( 'data', function( key ){
         move(false, false);
         break;
     case 'a':
-        move(false, true);
+        move(true, false);
         break;
     case 'd':
-        move(true, false);
+        move(false, true);
         break;
         
   }
@@ -57,10 +57,18 @@ stdin.on( 'data', function( key ){
 });
 
 const move = (left: boolean, right: boolean) => {
+    console.log('start');
     // Left
     GPIO.write(lFwdPin, left);
     GPIO.write(lBwdPin, !left);
     // Right
     GPIO.write(rFwdPin, right);
     GPIO.write(rBwdPin, !right);
+    setTimeout(() => {
+        console.log('stop');
+        GPIO.write(lFwdPin, false);
+        GPIO.write(lBwdPin, false);
+        GPIO.write(rFwdPin, false);
+        GPIO.write(rBwdPin, false);
+    }, 200)
 }
