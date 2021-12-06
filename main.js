@@ -1,19 +1,20 @@
 "use strict";
-// import GPIO from "rpi-gpio";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const rpi_gpio_1 = __importDefault(require("rpi-gpio"));
 console.log('running');
-// True Forward - False Backwards
-let lDir = true;
-let rDir = true;
 const lFwdPin = 35;
 const lBwdPin = 37;
 const rFwdPin = 36;
 const rBwdPin = 38;
 const pins = [lFwdPin, lBwdPin, rFwdPin, rBwdPin];
 // Enable pins and set to off
-// pins.forEach(pin => {
-//     GPIO.setup(pin, GPIO.DIR_OUT);
-//     GPIO.write(pin, false);
-// })
+pins.forEach(pin => {
+    rpi_gpio_1.default.setup(pin, rpi_gpio_1.default.DIR_OUT);
+    rpi_gpio_1.default.write(pin, false);
+});
 let stdin = process.stdin;
 // without this, we would only get streams once enter is pressed
 stdin.setRawMode(true);
@@ -28,6 +29,29 @@ stdin.on('data', function (key) {
     if (key.toString() === '\u0003') {
         process.exit();
     }
+    switch (key.toString()) {
+        case 'w':
+            move(true, true);
+            break;
+        case 's':
+            move(false, false);
+            break;
+        case 'a':
+            move(false, true);
+            break;
+        case 'd':
+            move(true, false);
+            break;
+    }
     // write the key to stdout all normal like
     process.stdout.write(key);
+    console.log(key);
 });
+const move = (left, right) => {
+    // Left
+    rpi_gpio_1.default.write(lFwdPin, left);
+    rpi_gpio_1.default.write(lBwdPin, !left);
+    // Right
+    rpi_gpio_1.default.write(rFwdPin, right);
+    rpi_gpio_1.default.write(rBwdPin, !right);
+};

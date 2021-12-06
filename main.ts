@@ -11,10 +11,10 @@ const rBwdPin = 38;
 const pins = [lFwdPin, lBwdPin, rFwdPin, rBwdPin];
 
 // Enable pins and set to off
-// pins.forEach(pin => {
-//     GPIO.setup(pin, GPIO.DIR_OUT);
-//     GPIO.write(pin, false);
-// })
+pins.forEach(pin => {
+    GPIO.setup(pin, GPIO.DIR_OUT);
+    GPIO.write(pin, false);
+})
 
 let stdin = process.stdin;
 
