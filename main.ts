@@ -13,7 +13,7 @@ const pins = [lFwdPin, lBwdPin, rFwdPin, rBwdPin];
 // Enable pins and set to off
 pins.forEach(pin => {
     GPIO.setup(pin, GPIO.DIR_OUT);
-    GPIO.write(pin, false);
+    // GPIO.write(pin, false); This doesnt work
 })
 
 let stdin = process.stdin;
@@ -48,6 +48,9 @@ stdin.on( 'data', function( key ){
     case 'd':
         move(false, true);
         break;
+    case ' ':
+        stop();
+        break;
         
   }
 
@@ -65,10 +68,15 @@ const move = (left: boolean, right: boolean) => {
     GPIO.write(rFwdPin, right);
     GPIO.write(rBwdPin, !right);
     setTimeout(() => {
-        console.log('stop');
-        GPIO.write(lFwdPin, false);
-        GPIO.write(lBwdPin, false);
-        GPIO.write(rFwdPin, false);
-        GPIO.write(rBwdPin, false);
+        if (left !== right) {
+            stop();
+        }
     }, 200)
+}
+
+const stop = () => {
+    GPIO.write(lFwdPin, false);
+    GPIO.write(lBwdPin, false);
+    GPIO.write(rFwdPin, false);
+    GPIO.write(rBwdPin, false);
 }

@@ -13,7 +13,7 @@ const pins = [lFwdPin, lBwdPin, rFwdPin, rBwdPin];
 // Enable pins and set to off
 pins.forEach(pin => {
     rpi_gpio_1.default.setup(pin, rpi_gpio_1.default.DIR_OUT);
-    rpi_gpio_1.default.write(pin, false);
+    // GPIO.write(pin, false); This doesnt work
 });
 let stdin = process.stdin;
 // without this, we would only get streams once enter is pressed
@@ -37,10 +37,13 @@ stdin.on('data', function (key) {
             move(false, false);
             break;
         case 'a':
-            move(false, true);
+            move(true, false);
             break;
         case 'd':
-            move(true, false);
+            move(false, true);
+            break;
+        case ' ':
+            stop();
             break;
     }
     // write the key to stdout all normal like
@@ -48,10 +51,22 @@ stdin.on('data', function (key) {
     console.log(key);
 });
 const move = (left, right) => {
+    console.log('start');
     // Left
     rpi_gpio_1.default.write(lFwdPin, left);
     rpi_gpio_1.default.write(lBwdPin, !left);
     // Right
     rpi_gpio_1.default.write(rFwdPin, right);
     rpi_gpio_1.default.write(rBwdPin, !right);
+    setTimeout(() => {
+        if (left !== right) {
+            stop();
+        }
+    }, 200);
+};
+const stop = () => {
+    rpi_gpio_1.default.write(lFwdPin, false);
+    rpi_gpio_1.default.write(lBwdPin, false);
+    rpi_gpio_1.default.write(rFwdPin, false);
+    rpi_gpio_1.default.write(rBwdPin, false);
 };
