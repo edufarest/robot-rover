@@ -1,13 +1,33 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const rpi_gpio_1 = __importDefault(require("rpi-gpio"));
+// import GPIO from "rpi-gpio";
 console.log('running');
-rpi_gpio_1.default.setup(7, rpi_gpio_1.default.DIR_OUT);
-let val = true;
-setInterval(() => {
-    val = !val;
-    rpi_gpio_1.default.write(7, val);
-}, 1000);
+// True Forward - False Backwards
+let lDir = true;
+let rDir = true;
+const lFwdPin = 35;
+const lBwdPin = 37;
+const rFwdPin = 36;
+const rBwdPin = 38;
+const pins = [lFwdPin, lBwdPin, rFwdPin, rBwdPin];
+// Enable pins and set to off
+// pins.forEach(pin => {
+//     GPIO.setup(pin, GPIO.DIR_OUT);
+//     GPIO.write(pin, false);
+// })
+let stdin = process.stdin;
+// without this, we would only get streams once enter is pressed
+stdin.setRawMode(true);
+// resume stdin in the parent process (node app won't quit all by itself
+// unless an error or process.exit() happens)
+stdin.resume();
+// i don't want binary, do you?
+stdin.setEncoding('utf8');
+// on any data into stdin
+stdin.on('data', function (key) {
+    // ctrl-c ( end of text )
+    if (key.toString() === '\u0003') {
+        process.exit();
+    }
+    // write the key to stdout all normal like
+    process.stdout.write(key);
+});
