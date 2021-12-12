@@ -3,7 +3,7 @@ import GPIO from "rpi-gpio";
 console.log('running');
 
 const lFwdPin = 35;
-const lBwdPin = 37;
+const lBwdPin = 40;
 
 const rFwdPin = 36;
 const rBwdPin = 38;
