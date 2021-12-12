@@ -4,6 +4,8 @@
   "description": "Rover from a robot vacuum",
   "main": "main.js",
   "scripts": {
+    "start": "node main.js",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
